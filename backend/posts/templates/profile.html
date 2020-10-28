@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %} Профиль {% endblock %}
+{% block content %}
+<a class="btn btn-sm text-muted" href="/" role="button">На главную</a>
+<main role="main" class="container">
+    <div class="row">
+            <div class="col-md-3 mb-3 mt-1">
+                    <div class="card">
+                            <div class="card-body">
+                                    <div class="h2">
+                                        {{ post_author.get_full_name }}
+                                    </div>
+                                    <div class="h3 text-muted">
+                                         <!-- username автора -->
+                                         {{ post_author.get_username }}
+                                    </div>
+                            </div>
+                            <li class="list-group-item">
+                                {% if following %}
+                                <a class="btn btn-lg btn-light" 
+                                        href="{% url 'profile_unfollow' post_author.username %}" role="button"> 
+                                        Отписаться 
+                                </a> 
+                                {% elif post_author != request.user %}
+                                <a class="btn btn-lg btn-primary" 
+                                        href="{% url 'profile_follow' post_author.username %}" role="button">
+                                Подписаться 
+                                </a>
+                                {% endif %}
+                            </li>
+                            <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                            <div class="h6 text-muted">
+                                            Подписчиков: {{f_count}} <br />
+                                            Подписан: {{follow_count}}
+                                            </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                            <div class="h6 text-muted">
+                                                <!-- Количество записей -->
+                                                Записей: {{ count }}
+                                            </div>
+                                    </li>
+                            </ul>
+                    </div>
+            </div>
+            <div class="col-md-9">                
+                <!-- Начало блока с отдельным постом --> 
+                {% for post in page %}
+                    <div class="card mb-3 mt-1 shadow-sm">
+                                              <!-- Текст поста -->
+                                            {% include "post_item.html" with post=post %} 
+                    </div>
+                <!-- Конец блока с отдельным постом --> 
+                {% endfor %}
+                <!-- Остальные посты -->  
+                {% if page.has_other_pages %}
+                    {% include "paginator.html" with items=page paginator=paginator%}
+                {% endif %}
+{% endblock %}
+     </div>
+    </div>
+</main>
