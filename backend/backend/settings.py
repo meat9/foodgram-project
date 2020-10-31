@@ -139,12 +139,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+#STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 # Login
 
 LOGIN_URL = "/auth/login/"
 LOGIN_REDIRECT_URL = "index"
-LOGOUT_REDIRECT_URL = "index"
+#LOGOUT_REDIRECT_URL = "index"
 #  подключаем движок filebased.EmailBackend
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 # указываем директорию, в которую будут складываться файлы писем
@@ -153,7 +156,8 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 SITE_ID = 1
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
+# STATIC_URL = "/static/"
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 CACHES = {
         'default': {
