@@ -15,7 +15,7 @@ def index(request):
     page = paginator.get_page(page_number) # получить записи с нужным смещением
     #return render(request, 'index.html', {'page': page, 'paginator': paginator})
     return render(request, 'indexAuth.html', {'page': page, 'paginator': paginator})
-
+ 
 
 @login_required
 def new_post(request):
