@@ -16,9 +16,9 @@ class Ingredient(models.Model):
 
 class Post(models.Model):
     CHOICES = (
-        ('BR', 'Завтрак'),
-        ('DI', 'Обед'),
-        ('SU', 'Ужин'),
+        ('Завтрак', 'Завтрак'),
+        ('Обед', 'Обед'),
+        ('Ужин', 'Ужин'),
     )
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="author_posts")
     name = models.TextField()

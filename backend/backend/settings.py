@@ -144,9 +144,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 # Login
-
 LOGIN_URL = "/auth/login/"
-LOGIN_REDIRECT_URL = "index"
+LOGIN_REDIRECT_URL = "/"
 #LOGOUT_REDIRECT_URL = "index"
 #  подключаем движок filebased.EmailBackend
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
@@ -164,3 +163,4 @@ CACHES = {
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         }
 }
+ 

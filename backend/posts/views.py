@@ -17,6 +17,9 @@ def index(request):
     return render(request, 'indexAuth.html', {'page': page, 'paginator': paginator})
  
 
+
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
 @login_required
 def new_post(request):
     text_head = 'Добавить запись'
@@ -43,10 +46,10 @@ def new_post(request):
                 time_to_made=time_to_made)
             return redirect('index')
         else:
-            return render(request, 'new.html', {'form': form, 'text_head': text_head, 'text_button': text_button})
+            return render(request, 'formRecipe.html', {'form': form, 'text_head': text_head, 'text_button': text_button})
     else:
         form = PostForm(request.POST, files=request.FILES or None)
-        return render(request, 'new.html', {'form': form, 'text_head': text_head, 'text_button': text_button})
+        return render(request, 'formRecipe.html', {'form': form, 'text_head': text_head, 'text_button': text_button})
 
 
 def profile(request, username):
@@ -72,9 +75,9 @@ def post_view(request, username, post_id):
     count = Post.objects.filter(author=post_author).count()
     com = Comment.objects.filter(post=post)
     form = CommentForm()
-    return render(request, "post.html", {'post_author': post_author, 'post': post,'count': count, "com" : com, "form" : form})
+    return render(request, "singlePage.html", {'post_author': post_author, 'post': post,'count': count, "com" : com, "form" : form})
 
-
+ 
 @login_required
 def post_edit(request, username, post_id):
     text_head = 'Изменить запись'
