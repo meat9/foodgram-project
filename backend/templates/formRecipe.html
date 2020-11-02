@@ -23,12 +23,14 @@
         <h1 class="main__title">Создание рецепта</h1>
     </div>
     <div class="form-container">
-        <form class="form" action="." method="post">
+        
+        <form class="form" action="{% url 'new_post' %}" method="post">
             {% csrf_token %}
+            
             <div class="form__group">
                 <label for="id_name" class="form__label">Название рецепта</label>
                 <div class="form__field-group">
-                    <input type="text" id="id_name" name="name" class="form__input">
+                    <input type="text" id="id_name" name="form.name" class="form__input">
                     <span class="form__error"></span>
                 </div>
             </div>
@@ -41,7 +43,7 @@
                             <label for="id_breakfast" class="tags__label">Завтрак</label>
                         </div>
                         <div class="tags__item">
-                            <input type="checkbox" name="lunch" id="id_lunch" class="tags__checkbox tags__checkbox_style_green" checked>
+                            <input type="checkbox" name="lunch" id="id_lunch" class="tags__checkbox tags__checkbox_style_green">
                             <label for="id_lunch" class="tags__label">Обед</label>
                         </div>
                         <div class="tags__item">
@@ -73,15 +75,18 @@
             <div class="form__group">
                 <label for="id_time" class="form__label">Время приготовления</label>
                 <div class="form__field-group form__field-group_time">
-                    <input type="text" id="id_time" name="name" class="form__input">
+
+                    <input type="text" id="id_time" name="{{ field.ingredient }}" class="form__input">
                     <label for="id_time" class="form__label">минут</label>
                     <span class="form__error"></span>
+
                 </div>
             </div>
             <div class="form__group">
+                
                 <label for="id_description" class="form__label">Описание</label>
                 <div class="form__field-group">
-                    <textarea name="description" id="id_description" rows="8" class="form__textarea"></textarea>
+                    <textarea name="form.text" id="id_description" rows="8" class="form__textarea"></textarea>
                     <span class="form__error"></span>
                 </div>
             </div>
@@ -93,7 +98,7 @@
                 </div>
             </div>
             <div class="form__footer">
-                <button class="button button_style_blue">Создать рецепт</button>
+                <button class="button button_style_blue">{{ text_button }}</button>
             </div>
         </form>
     </div>

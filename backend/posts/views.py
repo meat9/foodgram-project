@@ -18,12 +18,10 @@ def index(request):
  
 
 
-from django.views.decorators.csrf import csrf_exempt
-@csrf_exempt
+
 @login_required
 def new_post(request):
-    text_head = 'Добавить запись'
-    text_button = 'Добавить'
+    text_button = 'Создать рецепт'
     if request.method == "POST":
         form = PostForm(request.POST, files=request.FILES or None)
         if form.is_valid():
@@ -33,9 +31,7 @@ def new_post(request):
             ingredient = form.cleaned_data["ingredient"]
             tag = form.cleaned_data["tag"]
             time_to_made = form.cleaned_data["time_to_made"]
-            # text = form.cleaned_data["text"]
             # group = form.cleaned_data["group"]
-            # image = form.cleaned_data["image"]
             Post.objects.create(
                 author=request.user, 
                 name=name,
@@ -46,10 +42,10 @@ def new_post(request):
                 time_to_made=time_to_made)
             return redirect('index')
         else:
-            return render(request, 'formRecipe.html', {'form': form, 'text_head': text_head, 'text_button': text_button})
+            return render(request, 'formRecipe.html', {'form': form, 'text_button': text_button})
     else:
         form = PostForm(request.POST, files=request.FILES or None)
-        return render(request, 'formRecipe.html', {'form': form, 'text_head': text_head, 'text_button': text_button})
+        return render(request, 'formRecipe.html', {'form': form, 'text_button': text_button})
 
 
 def profile(request, username):

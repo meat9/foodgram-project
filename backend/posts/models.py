@@ -23,14 +23,14 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="author_posts")
     name = models.TextField()
     image = models.ImageField(upload_to='posts/', blank=True, null=True)
-    text = models.TextField()
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name="ingredient", blank=True, null=True)
-    tag = models.CharField(max_length=300, choices=CHOICES)
+    text = models.TextField(blank=True, null=True)
+    ingredient = models.ManyToManyField(Ingredient, related_name="ingredient", blank=True, null=True)
+    tag = models.CharField(max_length=300, choices=CHOICES,default='Завтрак', blank=True, null=True)
     time_to_made = models.IntegerField()
     pub_date = models.DateTimeField("date published", auto_now_add=True)
 
-    def __str__(self):
-       return self.text
+    #def __str__(self):
+   #    return self.text
 
 
 # class Comment(models.Model):

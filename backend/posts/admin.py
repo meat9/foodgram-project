@@ -3,7 +3,7 @@ from .models import Post, Ingredient
 
 class PostAdmin(admin.ModelAdmin):
     # поля, отображаемые в админке
-    list_display = ('pk', 'name', 'image', 'text', 'ingredient', 'tag', 'time_to_made')
+    list_display = ('pk', 'name', 'image', 'text', 'tag', 'time_to_made')
     # поиск по тексту постов
     search_fields = ('text',)
     # фильтрация по дате
