@@ -1,51 +1,49 @@
 import datetime as dt
-from django.http import HttpResponse
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
-from django.shortcuts import render, get_object_or_404
+from django.db.models import Sum
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PostForm
-from .models import Post, User, Follow, Ingredient
+from .models import Recipe, Ingredients, FollowUser, ShoppingList, RecipeIngredient, Tag
+from .utils import get_ingredients
 
 
 def index(request):
-    post_list = Post.objects.order_by('-pub_date').all()
-    paginator = Paginator(post_list, 10) # показывать по 10 записей на странице.
+    tags_filter = request.GET.getlist('filters')
+    recipe_list = Recipe.objects.order_by('-pub_date').all()
+    all_tags = Tag.objects.all()
+    if tags_filter:
+        recipe_list = recipe_list.filter(
+            tags__slug__in=tags_filter).distinct().all()
+    paginator = Paginator(recipe_list, 6) # показывать по 10 записей на странице.
     page_number = request.GET.get('page') # переменная в URL с номером запрошенной страницы
     page = paginator.get_page(page_number) # получить записи с нужным смещением
-    #return render(request, 'index.html', {'page': page, 'paginator': paginator})
-    return render(request, 'indexAuth.html', {'page': page, 'paginator': paginator})
+    return render(request, 'indexAuth.html', {'page': page, 'paginator': paginator, 'all_tags': all_tags})
  
 
+from django.contrib import messages 
 
-
-@login_required
+#@login_required
 def new_post(request):
-    text_button = 'Создать рецепт'
+    all_tags = Tag.objects.all()
+    user = User.objects.get(username=request.user)
     if request.method == "POST":
         form = PostForm(request.POST, files=request.FILES or None)
+        # ingredients = get_ingredients(request)
+        # if not ingredients:
+        #     form.add_error(None, 'Добавьте ингредиенты')  
         if form.is_valid():
-            name = form.cleaned_data["name"]
-            image = form.cleaned_data["image"]
-            text = form.cleaned_data["text"]
-            ingredient = form.cleaned_data["ingredient"]
-            tag = form.cleaned_data["tag"]
-            time_to_made = form.cleaned_data["time_to_made"]
-            # group = form.cleaned_data["group"]
-            Post.objects.create(
-                author=request.user, 
-                name=name,
-                image=image, 
-                text=text, 
-                ingredient=ingredient, 
-                tag=tag, 
-                time_to_made=time_to_made)
+            form.instance.author = user
+            form.save()
+            form.errors
             return redirect('index')
         else:
-            return render(request, 'formRecipe.html', {'form': form, 'text_button': text_button})
+            #return render(request, 'formRecipe.html', {'form': form})
+            return HttpResponse(form.errors)
     else:
         form = PostForm(request.POST, files=request.FILES or None)
-        return render(request, 'formRecipe.html', {'form': form, 'text_button': text_button})
+        return render(request, 'formRecipe.html', {'form': form, 'all_tags': all_tags})
 
 
 def profile(request, username):
@@ -74,7 +72,7 @@ def post_view(request, username, post_id):
     return render(request, "singlePage.html", {'post_author': post_author, 'post': post,'count': count, "com" : com, "form" : form})
 
  
-@login_required
+#@login_required
 def post_edit(request, username, post_id):
     text_head = 'Изменить запись'
     text_button = 'Сохранить'

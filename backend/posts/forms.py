@@ -1,9 +1,12 @@
-from django.forms import ModelForm
-from posts.models import Post
-from django import forms
+from django.forms import ModelForm, CheckboxSelectMultiple, ModelChoiceField
+from posts.models import Recipe, Ingredients
+
 
 class PostForm(ModelForm):
     class Meta:
-        model = Post
-        fields = ['name', 'image', 'text', 'ingredient', 'tag', 'time_to_made']
-        
+        model = Recipe
+        fields = ('title', 'image', 'description', 'tags', 'cooking_time', 'ingredients')
+        widgets = {
+            'tags': CheckboxSelectMultiple(),
+            
+        }

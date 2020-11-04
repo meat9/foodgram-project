@@ -1,5 +1,6 @@
 <!doctype html>
 {% load static %}
+{% load templates_filters %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,18 +19,17 @@
             {% block title %}
             <h1 class="main__title">Все Рецепты</h1>
             <ul class="tags">
-                <li class="tags__item">
-                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="#"></a>
-                    <span class="tags__label">Завтрак верх</span>
-                </li>
-                <li class="tags__item">
-                    <a id="lunch" class="tags__checkbox tags__checkbox_style_green tags__checkbox_active" href="#"></a>
-                    <span for="lunch" class="tags__label">Обед верх</span>
-                </li>
-                <li class="tags__item">
-                    <a id="dinner" class="tags__checkbox tags__checkbox_style_purple tags__checkbox_active" href="#"></a>
-                    <label for="dinner" class="tags__label">Ужин верх</label>
-                </li>
+                {% for tag in all_tags %}
+                    <li class="tags__item">
+                        <a
+                            id="{{ tags.slug }}"
+                            class="tags__checkbox tags__checkbox_style_{{ tag.color }}
+                            {% if tag.slug in request.GET|get_filter_values %} tags__checkbox_active {% endif %}"
+                            href="{% url 'index' %}?{{ request|get_filter_link:tag }}"></a>
+                        <span class="tags__label">{{ tag.name }}</span>
+                    </li>
+                {% endfor %}
+
             </ul>
             {% endblock %}
         </div>
@@ -41,18 +41,19 @@
         <div class="card" data-id="{{ post.pk }}">
             <a href="#" class="link" target="_blank"><img src="{% static '/images/testCardImg.png' %}"" alt="Какой-то текст" class="card__image"></a>
             <div class="card__body">
-                <a class="card__title link" href="#" target="_blank">{{ post.name }}</a>
+                <a class="card__title link" href="#" target="_blank">{{ post.title }}</a>
                 <ul class="card__items">
-                    {% if post.tag == "Обед" %}
-                        <li class="card__item"><span class="badge badge_style_green">Обед</span></li>
-                    {% elif post.tag == "Завтрак" %}                 
-                        <li class="card__item"><span class="badge badge_style_orange">Завтрак</span></li>
-                    {% elif post.tag == "Ужин" %}  
-                        <li class="card__item"><span class="badge badge_style_purple">Ужин</span></li>
+
+                    {% if post.tags %}
+                    <ul class="card__items">
+                        {% for tag in post.tags.all %}
+                        <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
+                        {% endfor %}
+                    </ul>
                     {% endif %}
                 </ul>
                 <div class="card__items card__items_column">
-                    <p class="card__text"><span class="icon-time"></span> {{ post.time_to_made }}</p>
+                    <p class="card__text"><span class="icon-time"></span> {{ post.cooking_time }} мин.</p>
                     <p class="card__text"><span class="icon-user"></span> <a href="#" style="color: black">{{ post.author }}</a></p>
                 </div>
             </div>
