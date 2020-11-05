@@ -20,33 +20,54 @@ def index(request):
     page_number = request.GET.get('page') # переменная в URL с номером запрошенной страницы
     page = paginator.get_page(page_number) # получить записи с нужным смещением
     return render(request, 'indexAuth.html', {'page': page, 'paginator': paginator, 'all_tags': all_tags})
- 
 
-from django.contrib import messages 
 
-#@login_required
 def new_post(request):
     all_tags = Tag.objects.all()
     user = User.objects.get(username=request.user)
     if request.method == "POST":
         form = PostForm(request.POST, files=request.FILES or None)
-        # ingredients = get_ingredients(request)
-        # if not ingredients:
-        #     form.add_error(None, 'Добавьте ингредиенты')  
         if form.is_valid():
             form.instance.author = user
             form.save()
             form.errors
             return redirect('index')
         else:
-            #return render(request, 'formRecipe.html', {'form': form})
+
             return HttpResponse(form.errors)
     else:
         form = PostForm(request.POST, files=request.FILES or None)
         return render(request, 'formRecipe.html', {'form': form, 'all_tags': all_tags})
 
 
+def recipe_view(request, recipe_id, username):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    username = get_object_or_404(User, username=username)
+    return render(request, 'singlePage.html', {'username': username, 'recipe': recipe, })
+
 def profile(request, username):
+    username = get_object_or_404(User, username=username)
+    tag = request.GET.getlist('filters')
+    #recipes = Recipe.objects.filter(author=username).select_related('author').all()
+    recipes = Recipe.objects.filter(author=username).order_by("-pub_date").all()
+    all_tags = Tag.objects.all()
+    if tag:
+        recipes = recipes.filter(tags__slug__in=tag)
+    paginator = Paginator(recipes, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    # if request.user.is_authenticated:
+    #     following = FollowUser.objects.filter(user=request.user).\
+    #         filter(author=username).select_related('author')
+    #     if not following:
+    #         following = None
+    #     else:
+    #         following = True
+    #     return render(request, "authorRecipe.html",{'username': username, 'page': page,'paginator': paginator, 'following': following})
+    return render(request, "authorRecipe.html",{'username': username, 'page': page,'paginator': paginator,'all_tags':all_tags })
+
+
+def profile1(request, username):
     post_author = get_object_or_404(User, username=username)
     profile = Post.objects.filter(author = post_author).order_by("-pub_date").all()
     paginator = Paginator(profile, 5)

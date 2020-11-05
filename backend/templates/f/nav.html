@@ -1,7 +1,6 @@
 <nav class="nav">
     <div class="nav__container container">
         {% if user.is_authenticated %}
-        Пользователь: {{ user.username }}.
         <ul class="nav__items list">
             <li class="nav__item nav__item_active"><a href="/" class="nav__link link">Рецепты</a></li>
             <li class="nav__item"><a href="#" class="nav__link link">Мои подписки</a></li>

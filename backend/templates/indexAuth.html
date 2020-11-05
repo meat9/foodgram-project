@@ -39,9 +39,15 @@
         {% block content %}
         {% for post in page %}
         <div class="card" data-id="{{ post.pk }}">
-            <a href="#" class="link" target="_blank"><img src="{% static '/images/testCardImg.png' %}"" alt="Какой-то текст" class="card__image"></a>
+            <a href="{% url 'recipe_view' post.author.username post.id %}" class="link" target="_blank">
+                {% if post.image %}
+                <img src="{{ post.image.url }}"" alt="{% static '/images/testCardImg.png' %}" class="card__image"></a>
+                {% else %}
+                <img src="{% static '/images/testCardImg.png' %}"" alt="Image was broken" class="card__image"></a>
+                {% endif %}
+
             <div class="card__body">
-                <a class="card__title link" href="#" target="_blank">{{ post.title }}</a>
+                <a class="card__title link" href="{% url 'recipe_view' post.author.username post.id %}" target="_blank">{{ post.title }}</a>
                 <ul class="card__items">
 
                     {% if post.tags %}
@@ -54,7 +60,7 @@
                 </ul>
                 <div class="card__items card__items_column">
                     <p class="card__text"><span class="icon-time"></span> {{ post.cooking_time }} мин.</p>
-                    <p class="card__text"><span class="icon-user"></span> <a href="#" style="color: black">{{ post.author }}</a></p>
+                    <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile' post.author.username %}" style="color: black">{{ post.author }}</a></p>
                 </div>
             </div>
             <div class="card__footer">
