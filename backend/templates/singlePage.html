@@ -16,8 +16,16 @@
 </header>
     <main class="main container">
         <div class="single-card" data-id="{{recipe.id}}" data-author="{{username.id}}">
-            
-            <img src="{{ recipe.image.url }}" alt="Картинка не найдена" class="single-card__image">
+            {% if recipe.image %}
+                {% thumbnail recipe.image "480x480" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"lass="card__image"></a>
+                {% endthumbnail %} 
+                <!-- <img src="{{ recipe.image.url }}" class="card__image"></a> -->
+            {% else %}
+            <img src="{% static '/images/testCardImg.png' %}"" alt="Image was broken" class="card__image"></a>
+            {% endif %}
+
+
             <div class="single-card__info">
                 <div class="single-card__header-info">
                     <h1 class="single-card__title">{{ recipe.title }}</h1>
@@ -25,13 +33,13 @@
                         {% if user.is_authenticated %}
                         <div class="single-card__favorite">
 
-{% if user.is_authenticated %}
+                        {% if user.is_authenticated %}
 
-        <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
+                            <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
 
-        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                            <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
 
-{% endif %}
+                        {% endif %}
                         </div>
                         {% endif %}
 
@@ -52,7 +60,7 @@
                     <p class="single-card__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
                     <ul class="single-card__items">
                         <li class="single-card__item"><p class="single-card__text"><span class="icon-user"></span> {{ recipe.author }}</p></li>
-                        <li class="single-card__item">  <a style="margin-left: 2.5em" href="#" class="single-card__text">Редактировать рецепт</a></li>
+                        <li class="single-card__item">  <a style="margin-left: 2.5em" href="{% url 'recipe_edit' recipe.id %}" class="single-card__text">Редактировать рецепт</a></li>
                     </ul>
                 </div>
                 <ul class="single-card__items">

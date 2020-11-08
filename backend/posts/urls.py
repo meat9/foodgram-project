@@ -12,6 +12,8 @@ urlpatterns = [
     path("<username>/", views.profile, name="profile"),
     # Просмотр записи
     path("<username>/<int:recipe_id>/", views.recipe_view, name="recipe_view"),
+    path('recipe/<int:recipe_id>/edit', views.recipe_edit, name='recipe_edit'),
+    path('recipe/<int:recipe_id>/delete', views.recipe_delete, name='recipe_delete'),
     #path("<username>/<int:post_id>/edit/", views.post_edit, name="post_edit"),
     #path("<username>/<int:post_id>/comment/", views.add_comment, name="add_comment"),
     #path("<username>/follow", views.profile_follow, name="profile_follow"), 

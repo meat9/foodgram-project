@@ -20,6 +20,7 @@ urlpatterns = [
         path("auth/", include("django.contrib.auth.urls")),
         # импорт из приложения posts
         path("", include("posts.urls")),
+        path("api/", include('api.urls')),
 
 
 ] 

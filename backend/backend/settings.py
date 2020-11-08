@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'posts',
     'users',
+    'api',
     'sorl.thumbnail',  
     'django.contrib.sites',
     'django.contrib.flatpages',

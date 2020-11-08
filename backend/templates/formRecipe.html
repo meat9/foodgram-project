@@ -20,33 +20,31 @@
     {% csrf_token %}
 </header>
 <main class="main container">
-    <div class="main__header">
-        <h1 class="main__title">Создание рецепта</h1>
-    </div>
+    {% csrf_token %}
+    {% load static %}
+    {% block static %}
+    <link rel="stylesheet" href="{% static 'pages/form.css' %}">
+    {% endblock %}
+    {% load user_filters %}
     <div class="form-container">
-        
-        <form class="form" action="{% url 'new_post' %}" method="post">
+        <form class="form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            
             <div class="form__group">
-                <label for="id_name" class="form__label">Название рецепта</label>
+                <label for="{{ form.title.id_for_label }}" class="form__label">Название рецепта</label>
                 <div class="form__field-group">
-                    {% load user_filters %}
                     {{ form.title|addclass:"form__input" }}
-                    <span class="form__error"></span>
+                    {% if form.errors %}
+                        {% for error in form.title.errors %}
+                            <span class="form__error">{{ error|escape }}</span>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
             <div class="form__group">
                 <p class="form__label">Теги</p>
                 <div class="form__field-group">
-                    {% csrf_token %}
                     <div class="tags">
-						<div class="tags__item">
-                            <!-- {% for tag in all_tags %}
-							<input type="checkbox" name="tags" value="breakfast" id="id_breakfast"
-								class="tags__checkbox tags__checkbox_style_{{ tag.color }}">
-                            <label for="id_breakfast" class="tags__label">{{ tag.name }}</label>
-                            {% endfor %} -->
+                        <div class="tags__item">
                             {% csrf_token %}
                             {% for tag in all_tags %}
                             <div class="tags__item">
@@ -54,22 +52,12 @@
                                     class="tags__checkbox tags__checkbox_style_{{ tag.color }}">
                                 <label for="id_breakfast" class="tags__label">{{ tag.name }}</label>
                             </div>
-                            <!-- <div class="tags__item">
-                                <input type="checkbox" name="tags" value="lunch" id="id_lunch"
-                                    class="tags__checkbox tags__checkbox_style_green">
-                                <label for="id_lunch" class="tags__label">Обед</label>
-                            </div>
-                            <div class="tags__item">
-                                <input type="checkbox" name="tags" value="dinner" id="id_dinner"
-                                    class="tags__checkbox tags__checkbox_style_purple">
-                                <label for="id_dinner" class="tags__label">Ужин</label>
-                            </div> -->
                             {% endfor %}
-						</div>
+                        </div>
                     </div>
                     {% if form.errors %}
                         {% for error in form.tags.errors %}
-                        <span class="form__error">{{ error|escape }}</span>
+                            <span class="form__error">{{ error|escape }}</span>
                         {% endfor %}
                     {% endif %}
                 </div>
@@ -79,21 +67,23 @@
                 <div class="form__field-group">
                     <div class="form__field-group-ingredientes">
                         <div class="form__dropdown">
-                            {{ form.ingredients|addclass:"form__input" }}
-                            <!-- <input type="text" id="nameIngredient" class="form__input"> -->
+                            <input type="text" id="nameIngredient" class="form__input">
                             <div class="form__dropdown-items"></div>
                         </div>
-       
                         <input type="number" id="cantidad" class="form__input" min="0">
-    
                         <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
                     </div>
-                    <div class="form__field-group-ingredientes-container">
- 
-
-                    </div>
+                    <div class="form__field-group-ingredientes-container"></div>
                     <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
-                    <span class="form__error"></span>
+                    <span class="form__error">
+                        {% if form.non_field_errors %}
+                            <div class="non-field-errors">
+                            {% for error in form.non_field_errors %}
+                                <p class="form-error">{{ error }}</p>
+                            {% endfor %}
+                            </div>
+                            {% endif %}
+                    </span>
                 </div>
             </div>
             <div class="form__group">
@@ -135,11 +125,8 @@
                     <button class="button button_style_blue">Создать рецепт</button>
                 {% endblock %}
             </div>
-            </form>
-        </div>
-    
-
-
+        </form>
+    </div>
 </main>
 {% include 'f/footer.html' %}
 <script src="{% static 'js/config/config.js' %}"></script>
