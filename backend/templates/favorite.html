@@ -1,5 +1,6 @@
 <!doctype html>
 {% load static %}
+{% csrf_token %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,55 +12,52 @@
 </head>
 <body class="body">
 <header class="header">
-    <nav class="nav">
-        <div class="nav__container container"> 
-            <ul class="nav__items list">
-                <li class="nav__item"><a href="#" class="nav__link link">Рецепты</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Мои подписки</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Создать рецепт</a></li>
-                <li class="nav__item nav__item_active"><a href="#" class="nav__link link">Избранное</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Список покупок</a> <span class="badge badge_style_blue nav__badge" id="counter">4</span></li>
-            </ul>
-            <ul class="nav__items list">
-                <li class="nav__item"><a href="#" class="nav__link link">Изменить пароль</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Выход</a></li>
-            </ul>
-        </div>
-    </nav>
+    {% include 'f/nav.html' %}
 </header>
-
+{% load user_filters %}
+{% load templates_filters %}
     <main class="main container">
         <div class="main__header">
             <h1 class="main__title">Избранное</h1>
             <ul class="tags">
-                <li class="tags__item">
-                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="#"></a>
-                    <span class="tags__label">Завтрак</span>
-                </li>
-                <li class="tags__item">
-                    <a id="lunch" class="tags__checkbox tags__checkbox_style_green tags__checkbox_active" href="#"></a>
-                    <span for="lunch" class="tags__label">Обед</span>
-                </li>
-                <li class="tags__item">
-                    <a id="dinner" class="tags__checkbox tags__checkbox_style_purple tags__checkbox_active" href="#"></a>
-                    <label for="dinner" class="tags__label">Ужин</label>
-                </li>
+                {% for tag in all_tags %}
+                    <li class="tags__item">
+                        <a
+                            id="{{ tags.slug }}"
+                            class="tags__checkbox tags__checkbox_style_{{ tag.color }}
+                            {% if tag.slug in request.GET|get_filter_values %} tags__checkbox_active {% endif %}"
+                            href="{% url 'follow' %}?{{ request|get_filter_link:tag }}"></a>
+                        <span class="tags__label">{{ tag.name }}</span>
+                    </li>
+                {% endfor %}
             </ul>
 
         </div>
         <div class="card-list">
-            <div class="card" data-id="123">
-                <a href="#" class="link" target="_blank"><img src="./images/testCardImg.png" alt="Какой-то текст" class="card__image"></a>
+            {% for post in page %}
+            <div class="card" data-id="{{ post.pk }}">
+                <a href="{% url 'recipe_view' post.author.username post.id %}" class="link" target="_blank">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}"" alt="{% static '/images/testCardImg.png' %}" class="card__image"></a>
+                    {% else %}
+                    <img src="{% static '/images/testCardImg.png' %}"" alt="Image was broken" class="card__image"></a>
+                    {% endif %}
+    
                 <div class="card__body">
-                    <a class="card__title link" href="#" target="_blank">Французские тосты</a>
+                    <a class="card__title link" href="{% url 'recipe_view' post.author.username post.id %}" target="_blank">{{ post.title }}</a>
                     <ul class="card__items">
-                        <li class="card__item"><span class="badge badge_style_green">Обед</span></li>
-                        <li class="card__item"><span class="badge badge_style_orange">Завтрак</span></li>
-                        <li class="card__item"><span class="badge badge_style_purple">Ужин</span></li>
+    
+                        {% if post.tags %}
+                        <ul class="card__items">
+                            {% for tag in post.tags.all %}
+                            <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </ul>
                     <div class="card__items card__items_column">
-                        <p class="card__text"><span class="icon-time"></span> 20 мин.</p>
-                        <p class="card__text"><span class="icon-user"></span> Вероника Чернова</p>
+                        <p class="card__text"><span class="icon-time"></span> {{ post.cooking_time }} мин.</p>
+                        <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile' post.author.username %}" style="color: black">{{ post.author }}</a></p>
                     </div>
                 </div>
                 <div class="card__footer">
@@ -67,44 +65,7 @@
                     <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
                 </div>
             </div>
-            <div class="card" data-id="1241">
-                <a href="#" class="link" target="_blank"><img src="./images/testCardImg.png" alt="Какой-то текст" class="card__image"></a>
-                <div class="card__body">
-                    <a class="card__title link" href="#" target="_blank">Французские тосты</a>
-                    <ul class="card__items">
-                        <li class="card__item"><span class="badge badge_style_green">Обед</span></li>
-                        <li class="card__item"><span class="badge badge_style_orange">Завтрак</span></li>
-                        <li class="card__item"><span class="badge badge_style_purple">Ужин</span></li>
-                    </ul>
-                    <div class="card__items card__items_column">
-                        <p class="card__text"><span class="icon-time"></span> 20 мин.</p>
-                        <p class="card__text"><span class="icon-user"></span> Вероника Чернова</p>
-                    </div>
-                </div>
-                <div class="card__footer">
-                    <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-                    <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
-                </div>
-            </div>
-            <div class="card" data-id="1124">
-                <a href="#" class="link" target="_blank"><img src="./images/testCardImg.png" alt="Какой-то текст" class="card__image"></a>
-                <div class="card__body">
-                    <a class="card__title link" href="#" target="_blank">Французские тосты</a>
-                    <ul class="card__items">
-                        <li class="card__item"><span class="badge badge_style_green">Обед</span></li>
-                        <li class="card__item"><span class="badge badge_style_orange">Завтрак</span></li>
-                        <li class="card__item"><span class="badge badge_style_purple">Ужин</span></li>
-                    </ul>
-                    <div class="card__items card__items_column">
-                        <p class="card__text"><span class="icon-time"></span> 20 мин.</p>
-                        <p class="card__text"><span class="icon-user"></span> Вероника Чернова</p>
-                    </div>
-                </div>
-                <div class="card__footer">
-                    <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-                    <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
-                </div>
-            </div>
+            {% endfor %}
         </div>
             {% include 'f/pagination.html' %}
         </nav>

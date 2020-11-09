@@ -11,19 +11,19 @@ def is_follow(author, user):
 
 
 @register.filter(name='is_favorite')
-def is_favorite(post, user):
-    return FollowRecipe.objects.filter(user=user, post=post).exists()
-
-
+def is_favorite(recipe, user):
+    return FollowRecipe.objects.filter(user=user, recipe=recipe).exists()
+##############
+ 
 @register.filter(name='is_shop')
-def is_shop(post, user):
-    return ShoppingList.objects.filter(user=user, post=post).exists()
+def is_shop(recipe, user):
+    return ShoppingList.objects.filter(user=user, recipe=recipe).exists()
 
 
 @register.filter(name='get_filter_values')
 def get_filter_values(value):
     return value.getlist('filters')
-
+ 
 
 @register.filter(name="get_filter_link")
 def get_filter_link(request, tag):
