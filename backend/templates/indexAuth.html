@@ -12,7 +12,9 @@
 </head>
 <body class="body">
   <header class="header">
+
     {% include 'f/nav.html' %}
+
   </header>
     <main class="main container">
         <div class="main__header">
@@ -65,27 +67,27 @@
             </div>
             <div class="card__footer">
                 {% load templates_filters %}
-
-                {% if user.is_authenticated %}
+                
                     {% if post|is_shop:user %}
-                    
                         <button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button>
                     {% else %}
-                     
                         <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
                     {% endif %}
-                {% endif %}
                 {% if user.is_authenticated %}
-                   
-                        {% if recipe|is_favorite:user %}
-
-                            <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
-                        {% else %}
-                            <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
-
-                        {% endif %}
+                    {% if post|is_favorite:user %}
+                        <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
+                    {% else %}
+                        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                    {% endif %}
                 {% endif %}
- 
+                
+
+
+        </span></button> 
+
+
+
+
 
             </div>
         </div>
@@ -95,28 +97,24 @@
 
         {% include 'f/pagination.html' %}
     </main>
-    {% include 'f/footer.html' %}
-    <script src="{% static 'js/config/config.js' %}"></script>
-    {% if user.is_authenticated %}
-    <script src="{% static 'js/components/MainCards.js' %}"></script>
-
-    <script src="{% static 'js/components/Purchases.js' %}"></script>
-    <script src="{% static 'js/components/Favorites.js' %}"></script>
-
-    <script src="{% static 'js/components/CardList.js' %}"></script>
-    <script src="{% static 'js/components/Header.js' %}"></script>
-
-    <script src="{% static 'js/api/Api.js' %}"></script>
-    <script src="{% static 'js/indexAuth.js' %}"></script>
-    {% else %}
-    <script src="{% static 'js/components/MainCards.js' %}"></script>
-    <script src="{% static 'js/components/Purchases.js' %}"></script>
-
-    <script src="{% static 'js/components/CardList.js' %}"></script>
-    <script src="{% static 'js/components/Header.js' %}"></script>
-
-    <script src="{% static 'js/api/Api.js' %}"></script>
-    <script src="{% static 'js/indexNotAuth.js' %}"></script>
-    {% endif %}
+{% include 'f/footer.html' %}
+<script src="{% static 'js/config/config.js' %}"></script>
+{% if user.is_authenticated %}
+<script src="{% static 'js/components/MainCards.js' %}"></script>
+<script src="{% static 'js/components/Purchases.js' %}"></script>
+<script src="{% static 'js/components/Favorites.js' %}"></script>
+<script src="{% static 'js/components/CardList.js' %}"></script>
+<script src="{% static 'js/components/Header.js' %}"></script>
+<script src="{% static 'js/api/Api.js' %}"></script>
+<script src="{% static 'js/indexAuth.js' %}"></script>
+{% else %}
+<script src="{% static 'js/components/MainCards.js' %}"></script>
+<script src="{% static 'js/components/Purchases.js' %}"></script>
+<script src="{% static 'js/components/CardList.js' %}"></script>
+<script src="{% static 'js/components/Header.js' %}"></script>
+<script src="{% static 'js/components/Favorites.js' %}"></script>
+<script src="{% static 'js/api/Api.js' %}"></script>
+<script src="{% static 'js/indexNotAuth.js' %}"></script>
+{% endif %}
 </body>
 </html>

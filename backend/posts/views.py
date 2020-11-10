@@ -12,7 +12,6 @@ from .utils import get_ingredients
 def index(request):
     tags_filter = request.GET.getlist('filters')
     recipe_list = Recipe.objects.order_by('-pub_date').all()
-    shopping_list = ShoppingList.objects.filter(user=request.user).all()
     all_tags = Tag.objects.all()
     if tags_filter:
         recipe_list = recipe_list.filter(
@@ -20,7 +19,7 @@ def index(request):
     paginator = Paginator(recipe_list, 6) # показывать по 10 записей на странице.
     page_number = request.GET.get('page') # переменная в URL с номером запрошенной страницы
     page = paginator.get_page(page_number) # получить записи с нужным смещением
-    return render(request, 'indexAuth.html', {'page': page, 'paginator': paginator, 'all_tags': all_tags, 'shopping_list': shopping_list})
+    return render(request, 'indexAuth.html', {'page': page, 'paginator': paginator, 'all_tags': all_tags})
     
 
 def new_post(request):
@@ -52,14 +51,12 @@ def new_post(request):
 
 def recipe_view(request, recipe_id, username):
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    shopping_list = ShoppingList.objects.filter(user=request.user).all()
     username = get_object_or_404(User, username=username)
-    return render(request, 'singlePage.html', {'username': username, 'recipe': recipe, 'shopping_list': shopping_list})
+    return render(request, 'singlePage.html', {'username': username, 'recipe': recipe })
 
 
 def profile(request, username):
     username = get_object_or_404(User, username=username)
-    shopping_list = ShoppingList.objects.filter(user=request.user).all()
     #username = User.objects.get(username=username)
     tag = request.GET.getlist('filters')
     #recipes = Recipe.objects.filter(author=username).select_related('author').all()
@@ -78,7 +75,7 @@ def profile(request, username):
     #     else:
     #         following = True
     #     return render(request, "authorRecipe.html",{'username': username, 'page': page,'paginator': paginator, 'following': following})
-    return render(request, "authorRecipe.html",{'username': username, 'page': page,'paginator': paginator,'all_tags':all_tags, 'shopping_list': shopping_list })
+    return render(request, "authorRecipe.html",{'username': username, 'page': page,'paginator': paginator,'all_tags':all_tags})
 
 
 def recipe_edit(request, recipe_id):
@@ -116,7 +113,6 @@ def recipe_delete(request, recipe_id):
 def favorite(request):
     tags_filter = request.GET.getlist('filters')
     all_tags = Tag.objects.all()
-    shopping_list = ShoppingList.objects.filter(user=request.user).all()
     recipe_list = Recipe.objects.filter(follow_recipe__user__id=request.user.id).all()
     if tags_filter:
         recipe_list = recipe_list.filter(
@@ -124,24 +120,37 @@ def favorite(request):
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, 'favorite.html', {'page': page, 'paginator': paginator, 'all_tags': all_tags, 'shopping_list': shopping_list })
+    return render(request, 'favorite.html', {'page': page, 'paginator': paginator, 'all_tags': all_tags })
 
 
 def follow(request):
     author_list = FollowUser.objects.filter(user__id=request.user.id).all()
-    shopping_list = ShoppingList.objects.filter(user=request.user).all()
     paginator = Paginator(author_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, 'myFollow.html', {'page': page, 'paginator': paginator, 'author': author_list, 'shopping_list': shopping_list})
+    return render(request, 'myFollow.html', {'page': page, 'paginator': paginator, 'author': author_list})
 
 
 def shopping_list(request):
-    shopping_list = ShoppingList.objects.filter(user=request.user).all()
-    return render(request, 'shopList.html',{'shopping_list': shopping_list})
+    if request.user.is_active:
+        shop_list = ShoppingList.objects.filter(user=request.user).all()
+        
+        return render(request, 'shopList.html',{'shop_list': shop_list})
+    else:
+        shop_list = ShoppingList.objects.first()
+        return render(request, 'shopList.html',{'shop_list': shop_list})
 
 
-
+def download_card(request):
+    recipes = Recipe.objects.filter(recipe_shopping_list__user=request.user)
+    ingredients = recipes.values('ingredients__title', 'ingredients__dimension').annotate(total_amount=Sum('recipe_ingredients__amount'))
+    file_data = ""
+    for item in ingredients:
+        line = ' '.join(str(value) for value in item.values())
+        file_data += line + '\n'
+    response = HttpResponse(file_data, content_type='application/text charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="ShoppingList.txt"'
+    return response
 
 
 

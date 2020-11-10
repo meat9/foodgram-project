@@ -26,7 +26,7 @@
                             id="{{ tags.slug }}"
                             class="tags__checkbox tags__checkbox_style_{{ tag.color }}
                             {% if tag.slug in request.GET|get_filter_values %} tags__checkbox_active {% endif %}"
-                            href="{% url 'follow' %}?{{ request|get_filter_link:tag }}"></a>
+                            href="{% url 'favorite' %}?{{ request|get_filter_link:tag }}"></a>
                         <span class="tags__label">{{ tag.name }}</span>
                     </li>
                 {% endfor %}
@@ -61,8 +61,13 @@
                     </div>
                 </div>
                 <div class="card__footer">
+                    
                     <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-                    <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                    {% if post|is_favorite:user %}
+                        <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
+                    {% else %}
+                        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}

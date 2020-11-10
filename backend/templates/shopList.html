@@ -19,7 +19,7 @@
     </div>
     <div class="card-list card-list_column">
         <ul class="shopping-list">
-            {% for item in shopping_list %}
+            {% for item in shop_list %}
                 <li class="shopping-list__item" data-id="{{item.recipe.id}}">
                     <div class="recipe recipe_reverse">
                         <img src="{{ item.recipe.image.url }}" alt="какой-то текст" class="recipe__image recipe__image_big">
@@ -30,7 +30,7 @@
                 </li>
             {% endfor %}
         </ul>
-        <a href="#"><button class="button button_style_blue">Скачать список</button></a>
+        <a href="{% url 'download_card' %}"><button class="button button_style_blue">Скачать список</button></a>
 
 
     </div>

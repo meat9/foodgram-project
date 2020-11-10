@@ -13,11 +13,14 @@ def is_follow(author, user):
 @register.filter(name='is_favorite')
 def is_favorite(recipe, user):
     return FollowRecipe.objects.filter(user=user, recipe=recipe).exists()
-##############
- 
+
+
 @register.filter(name='is_shop')
 def is_shop(recipe, user):
-    return ShoppingList.objects.filter(user=user, recipe=recipe).exists()
+    if user.is_authenticated:
+        return ShoppingList.objects.filter(user=user, recipe=recipe).exists()
+    else:
+        return ShoppingList.objects.first()
 
 
 @register.filter(name='get_filter_values')
