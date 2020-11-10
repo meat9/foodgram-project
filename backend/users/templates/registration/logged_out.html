@@ -1,16 +1,13 @@
+{% extends 'base.html' %}
 
-{% block title %}Вы вышли из системы{% endblock %}
+{% block title %}Вы вышли{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8 p-5">
-        <div class="card">
-            <div class="card-header">Вы вышли из системы</div>
-            <div class="card-body">
-                <p>Вы вышли из своей учётной записи. Ждём вас снова!</p>
-            </div> <!-- card body -->
-        </div> <!-- card -->
-    </div> <!-- col -->
-</div> <!-- row -->
 
-{% endblock %}
+    <div style="display: block; margin-left: auto; margin-right: auto">
+        <div class="main__header">
+            <h1 class="main__title">Вы вышли из своей учётной записи. Ждём вас снова!</h1>
+        </div>
+    </div>
+
+{% endblock  %}
