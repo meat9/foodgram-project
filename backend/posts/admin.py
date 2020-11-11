@@ -1,20 +1,32 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Recipe, Ingredients, Tag, \
-    RecipeIngredient, FollowUser, FollowRecipe, \
-    ShoppingList
+from .models import (
+    Recipe,
+    Ingredients,
+    Tag,
+    RecipeIngredient,
+    FollowUser,
+    FollowRecipe,
+    ShoppingList,
+)
 
 
 class MyUserAdmin(UserAdmin):
-    list_filter = UserAdmin.list_filter + ('email', 'first_name', 'last_name', 'username')
+    list_filter = UserAdmin.list_filter + (
+        "email",
+        "first_name",
+        "last_name",
+        "username",
+    )
+
 
 admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug')
+    list_display = ("name", "slug")
 
 
 class RecipeIngredientInline(admin.TabularInline):
@@ -22,34 +34,34 @@ class RecipeIngredientInline(admin.TabularInline):
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author')
-    list_filter = ('author', 'title')
+    list_display = ("title", "author")
+    list_filter = ("author", "title")
     inlines = (RecipeIngredientInline,)
 
 
 class IngredientsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'dimension')
-    list_filter = ('title',)
+    list_display = ("title", "dimension")
+    list_filter = ("title",)
 
 
 class RecipeIngredientAdmin(admin.ModelAdmin):
-    list_display = ('recipe', 'ingredient', 'amount')
-    list_filter = ('ingredient',)
+    list_display = ("recipe", "ingredient", "amount")
+    list_filter = ("ingredient",)
 
 
 class FollowAdmin(admin.ModelAdmin):
-    list_display = ('user', 'author')
-    fields = ('user', 'author')
+    list_display = ("user", "author")
+    fields = ("user", "author")
 
 
 class FavoritesAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe')
-    fields = ('user', 'recipe')
+    list_display = ("user", "recipe")
+    fields = ("user", "recipe")
 
 
 class ShopListAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe')
-    fields = ('user', 'recipe')
+    list_display = ("user", "recipe")
+    fields = ("user", "recipe")
 
 
 admin.site.register(Tag, TagAdmin)

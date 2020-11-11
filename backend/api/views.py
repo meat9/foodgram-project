@@ -4,15 +4,10 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 from rest_framework.utils import json
-
-from posts.models import Recipe, FollowRecipe, \
-    Ingredients, FollowUser, ShoppingList
+from posts.models import Recipe, FollowRecipe, Ingredients, FollowUser, ShoppingList
 
 
 class Favorites(LoginRequiredMixin, View):
-    """
-    Функция добавления/удаления рецепта из "Избранное"
-    """
     def post(self, request):
         req_ = json.loads(request.body)
         recipe_id = req_.get("id", None)
@@ -27,28 +22,24 @@ class Favorites(LoginRequiredMixin, View):
         return JsonResponse({"success": False}, status=400)
 
     def delete(self, request, recipe_id):
-        recipe = get_object_or_404(
-            FollowRecipe, recipe=recipe_id, user=request.user
-        )
+        recipe = get_object_or_404(FollowRecipe, recipe=recipe_id, user=request.user)
         recipe.delete()
         return JsonResponse({"success": True})
 
 
 class Purchases(LoginRequiredMixin, View):
-
     def post(self, request):
-        recipe_id = json.loads(request.body)['id']
+        recipe_id = json.loads(request.body)["id"]
         recipe = get_object_or_404(Recipe, id=recipe_id)
-        ShoppingList.objects.get_or_create(
-            user=request.user, recipe=recipe)
-        return JsonResponse({'success': True})
+        ShoppingList.objects.get_or_create(user=request.user, recipe=recipe)
+        return JsonResponse({"success": True})
 
     def delete(self, request, recipe_id):
         recipe = get_object_or_404(Recipe, id=recipe_id)
         user = get_object_or_404(User, username=request.user.username)
         obj = get_object_or_404(ShoppingList, user=user, recipe=recipe)
         obj.delete()
-        return JsonResponse({'success': True})
+        return JsonResponse({"success": True})
 
 
 class Subscribe(LoginRequiredMixin, View):
@@ -66,9 +57,7 @@ class Subscribe(LoginRequiredMixin, View):
         return JsonResponse({"success": False}, status=400)
 
     def delete(self, request, author_id):
-        user = get_object_or_404(
-            User, username=request.user.username
-        )
+        user = get_object_or_404(User, username=request.user.username)
         author = get_object_or_404(User, id=author_id)
         obj = get_object_or_404(FollowUser, user=user, author=author)
         obj.delete()
@@ -92,8 +81,10 @@ class Purchase(LoginRequiredMixin, View):
 
 class Ingredient(LoginRequiredMixin, View):
     def get(self, request):
-        text = request.GET['query']
-        #text = request.POST.get('query', False)
-        ingredients = list(Ingredients.objects.filter(
-            title__icontains=text).values('title', 'dimension'))
+        text = request.GET["query"]
+        ingredients = list(
+            Ingredients.objects.filter(title__icontains=text).values(
+                "title", "dimension"
+            )
+        )
         return JsonResponse(ingredients, safe=False)

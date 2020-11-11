@@ -1,5 +1,4 @@
 from django import template
-
 from posts.models import FollowUser, FollowRecipe, ShoppingList
 
 register = template.Library()
@@ -26,7 +25,7 @@ def is_shop(recipe, user):
 @register.filter(name='get_filter_values')
 def get_filter_values(value):
     return value.getlist('filters')
- 
+
 
 @register.filter(name="get_filter_link")
 def get_filter_link(request, tag):

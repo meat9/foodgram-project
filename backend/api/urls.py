@@ -10,5 +10,4 @@ urlpatterns = [
     path("subscriptions/<int:author_id>", views.Subscribe.as_view()),
     path("purchases/", views.Purchase.as_view()),
     path("purchases/<int:recipe_id>", views.Purchase.as_view()),
-
 ]
