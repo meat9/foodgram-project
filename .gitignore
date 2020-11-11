@@ -27,6 +27,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 static/
+static1/
 sent_emails/
 .vscode/
 
