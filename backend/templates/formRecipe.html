@@ -1,140 +1,142 @@
-
 {% block title %}{% endblock %}
 {% block content %}
 {% load static %}
 {% load user_filters %}
 {% csrf_token %}
 <html lang="en">
+
 <head>
     {% csrf_token %}
     {% include 'f/nav.html' %}
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Создание рецепта</title>
     <link rel="stylesheet" href="{% static 'pages/form.css' %}">
 </head>
+
 <body class="body">
-<header class="header">
-    {% csrf_token %}
-</header>
-<main class="main container">
-    {% csrf_token %}
-    {% load static %}
-    {% block static %}
-    <link rel="stylesheet" href="{% static 'pages/form.css' %}">
-    {% endblock %}
-    {% load user_filters %}
-    <div class="form-container">
-        <form class="form" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form__group">
-                <label for="{{ form.title.id_for_label }}" class="form__label">Название рецепта</label>
-                <div class="form__field-group">
-                    {{ form.title|addclass:"form__input" }}
-                    {% if form.errors %}
+    <header class="header">
+        {% csrf_token %}
+    </header>
+    <main class="main container">
+        {% csrf_token %}
+        {% load static %}
+        {% block static %}
+        <link rel="stylesheet" href="{% static 'pages/form.css' %}">
+        {% endblock %}
+        {% load user_filters %}
+        <div class="form-container">
+            <form class="form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form__group">
+                    <label for="{{ form.title.id_for_label }}" class="form__label">Название рецепта</label>
+                    <div class="form__field-group">
+                        {{ form.title|addclass:"form__input" }}
+                        {% if form.errors %}
                         {% for error in form.title.errors %}
-                            <span class="form__error">{{ error|escape }}</span>
+                        <span class="form__error">{{ error|escape }}</span>
                         {% endfor %}
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="form__group">
-                <p class="form__label">Теги</p>
-                <div class="form__field-group">
-                    <div class="tags">
-                        <div class="tags__item">
-                            {% csrf_token %}
-                            {% for tag in all_tags %}
+                <div class="form__group">
+                    <p class="form__label">Теги</p>
+                    <div class="form__field-group">
+                        <div class="tags">
                             <div class="tags__item">
-                                <input type="checkbox" name="tags" value="{{ tag.pk }}" id="id_breakfast"
-                                    class="tags__checkbox tags__checkbox_style_{{ tag.color }}">
-                                <label for="id_breakfast" class="tags__label">{{ tag.name }}</label>
+                                {% csrf_token %}
+                                {% for tag in all_tags %}
+                                <div class="tags__item">
+                                    <input type="checkbox" name="tags" value="{{ tag.pk }}" id="id_breakfast"
+                                        class="tags__checkbox tags__checkbox_style_{{ tag.color }}">
+                                    <label for="id_breakfast" class="tags__label">{{ tag.name }}</label>
+                                </div>
+                                {% endfor %}
                             </div>
-                            {% endfor %}
                         </div>
-                    </div>
-                    {% if form.errors %}
+                        {% if form.errors %}
                         {% for error in form.tags.errors %}
-                            <span class="form__error">{{ error|escape }}</span>
+                        <span class="form__error">{{ error|escape }}</span>
                         {% endfor %}
-                    {% endif %}
-                </div>
-            </div>
-            <div class="form__group">
-                <label for="nameIngredient" class="form__label">Ингредиенты</label>
-                <div class="form__field-group">
-                    <div class="form__field-group-ingredientes">
-                        <div class="form__dropdown">
-                            <input type="text" id="nameIngredient" class="form__input">
-                            <div class="form__dropdown-items"></div>
-                        </div>
-                        <input type="number" id="cantidad" class="form__input" min="0">
-                        <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
+                        {% endif %}
                     </div>
-                    <div class="form__field-group-ingredientes-container"></div>
-                    <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
-                    <span class="form__error">
-                        {% if form.non_field_errors %}
+                </div>
+                <div class="form__group">
+                    <label for="nameIngredient" class="form__label">Ингредиенты</label>
+                    <div class="form__field-group">
+                        <div class="form__field-group-ingredientes">
+                            <div class="form__dropdown">
+                                <input type="text" id="nameIngredient" class="form__input">
+                                <div class="form__dropdown-items"></div>
+                            </div>
+                            <input type="number" id="cantidad" class="form__input" min="0">
+                            <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
+                        </div>
+                        <div class="form__field-group-ingredientes-container"></div>
+                        <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
+                        <span class="form__error">
+                            {% if form.non_field_errors %}
                             <div class="non-field-errors">
-                            {% for error in form.non_field_errors %}
+                                {% for error in form.non_field_errors %}
                                 <p class="form-error">{{ error }}</p>
-                            {% endfor %}
+                                {% endfor %}
                             </div>
                             {% endif %}
-                    </span>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="form__group">
-                <label for="{{ form.cooking_time.id_for_label }}" class="form__label">Время приготовления</label>
-                <div class="form__field-group form__field-group_time">
-                    {{ form.cooking_time|addclass:"form__input" }}
-                    <label for="id_time" class="form__label">минут</label>
-                    {% if form.errors %}
+                <div class="form__group">
+                    <label for="{{ form.cooking_time.id_for_label }}" class="form__label">Время приготовления</label>
+                    <div class="form__field-group form__field-group_time">
+                        {{ form.cooking_time|addclass:"form__input" }}
+                        <label for="id_time" class="form__label">минут</label>
+                        {% if form.errors %}
                         {% for error in field.errors %}
-                            <span class="form__error">{{ error|escape }}</span>
+                        <span class="form__error">{{ error|escape }}</span>
                         {% endfor %}
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="form__group">
-                <label for="{{ form.description.id_for_label }}" class="form__label">Описание</label>
-                <div class="form__field-group">
-                    {{ form.description|addclass:"form__textarea" }}
-                    {% if form.errors %}
+                <div class="form__group">
+                    <label for="{{ form.description.id_for_label }}" class="form__label">Описание</label>
+                    <div class="form__field-group">
+                        {{ form.description|addclass:"form__textarea" }}
+                        {% if form.errors %}
                         {% for error in field.errors %}
-                            <span class="form__error">{{ error|escape }}</span>
+                        <span class="form__error">{{ error|escape }}</span>
                         {% endfor %}
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="form__group">
-                <span class="form__label">Загрузить фото</span>
-                <div class="form__field-group">
-                    {{ form.image|addclass:"form__file-button" }}
-                    {% if form.errors %}
+                <div class="form__group">
+                    <span class="form__label">Загрузить фото</span>
+                    <div class="form__field-group">
+                        {{ form.image|addclass:"form__file-button" }}
+                        {% if form.errors %}
                         {% for error in field.errors %}
-                            <span class="form__error">{{ error|escape }}</span>
+                        <span class="form__error">{{ error|escape }}</span>
                         {% endfor %}
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="form__footer">
-                {% block form_button %}
+                <div class="form__footer">
+                    {% block form_button %}
                     <button class="button button_style_blue">Создать рецепт</button>
-                {% endblock %}
-            </div>
-        </form>
-    </div>
-</main>
-{% include 'f/footer.html' %}
-<script src="{% static 'js/config/config.js' %}"></script>
-<script src="{% static 'js/components/Header.js' %}"></script>
-<script src="{% static 'js/utils/debouncing.js' %}"></script>
-<script src="{% static 'js/api/Api.js' %}"></script>
-<script src="{% static 'formRecipe.js' %}"></script>
+                    {% endblock %}
+                </div>
+            </form>
+        </div>
+    </main>
+    {% include 'f/footer.html' %}
+    <script src="{% static 'js/config/config.js' %}"></script>
+    <script src="{% static 'js/components/Header.js' %}"></script>
+    <script src="{% static 'js/utils/debouncing.js' %}"></script>
+    <script src="{% static 'js/api/Api.js' %}"></script>
+    <script src="{% static 'formRecipe.js' %}"></script>
 </body>
+
 </html>
 
 {% endblock %}

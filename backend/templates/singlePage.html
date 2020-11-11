@@ -2,27 +2,28 @@
 {% load static %}
 {% load thumbnail %}
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ recipe.title }}</title>
     <link rel="stylesheet" href="{% static 'pages/single.css' %}">
 </head>
+
 <body class="body">
-<header class="header">
-    {% include 'f/nav.html' %}
-</header>
+    <header class="header">
+        {% include 'f/nav.html' %}
+    </header>
     <main class="main container">
         <div class="single-card" data-id="{{recipe.id}}" data-author="{{username.id}}">
             {% if recipe.image %}
-                {% thumbnail recipe.image "480x480" crop="center" as im %}
-                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"lass="card__image"></a>
-                {% endthumbnail %} 
-                <!-- <img src="{{ recipe.image.url }}" class="card__image"></a> -->
+            {% thumbnail recipe.image "480x480" crop="center" as im %}
+            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" lass="card__image"></a>
+            {% endthumbnail %}
             {% else %}
-            <img src="{% static '/images/testCardImg.png' %}"" alt="Image was broken" class="card__image"></a>
+            <img src="{% static '/images/testCardImg.png' %}"" alt=" Image was broken" class="card__image"></a>
             {% endif %}
 
 
@@ -32,16 +33,18 @@
                     <div class="single-card__favorite">
                         {% if user.is_authenticated %}
                         <div class="single-card__favorite">
-                        {% if user.is_authenticated %}
+                            {% if user.is_authenticated %}
                             {% load templates_filters %}
                             {% if recipe|is_favorite:user %}
-            
-                                <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
+
+                            <button class="button button_style_none" name="favorites"><span
+                                    class="icon-favorite icon-favorite_active"></span></button>
                             {% else %}
-                                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                            <button class="button button_style_none" name="favorites" data-out><span
+                                    class="icon-favorite"></span></button>
 
                             {% endif %}
-                        {% endif %}
+                            {% endif %}
                         </div>
                         {% endif %}
 
@@ -51,9 +54,9 @@
 
                 <ul class="single-card__items">
                     {% if recipe.tags %}
-                        {% for tag in recipe.tags.all %}
-                            <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
-                        {% endfor %}
+                    {% for tag in recipe.tags.all %}
+                    <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
+                    {% endfor %}
                     {% endif %}
                 </ul>
 
@@ -61,8 +64,12 @@
                 <div class="single-card__items single-card__items_column">
                     <p class="single-card__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
                     <ul class="single-card__items">
-                        <li class="single-card__item"><p class="single-card__text"><span class="icon-user"></span> {{ recipe.author }}</p></li>
-                        <li class="single-card__item">  <a style="margin-left: 2.5em" href="{% url 'recipe_edit' recipe.id %}" class="single-card__text">Редактировать рецепт</a></li>
+                        <li class="single-card__item">
+                            <p class="single-card__text"><span class="icon-user"></span> {{ recipe.author }}</p>
+                        </li>
+                        <li class="single-card__item"> <a style="margin-left: 2.5em"
+                                href="{% url 'recipe_edit' recipe.id %}" class="single-card__text">Редактировать
+                                рецепт</a></li>
                     </ul>
                 </div>
                 <ul class="single-card__items">
@@ -70,20 +77,24 @@
                     {% include 'buy_button.html' %}
                     {% load templates_filters %}
                     {% if user.username != profile.username %}
-                        {% if user.is_authenticated %}
-                            {% if recipe.author|is_follow:user %}
-                            <li class="single-card__item"><button class="button button_style_light-blue button_size_auto" name="subscribe"><span class="icon-check button__icon"></span> Отписаться от автора </button>
-                            {% else %}
-                            <li class="single-card__item"><button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Подписаться на автора</button></li>
-                            {% endif %}
-                        {% endif %}
+                    {% if user.is_authenticated %}
+                    {% if recipe.author|is_follow:user %}
+                    <li class="single-card__item"><button class="button button_style_light-blue button_size_auto"
+                            name="subscribe"><span class="icon-check button__icon"></span> Отписаться от автора
+                        </button>
+                        {% else %}
+                    <li class="single-card__item"><button class="button button_style_light-blue button_size_auto"
+                            name="subscribe" data-out>Подписаться на автора</button></li>
+                    {% endif %}
+                    {% endif %}
                     {% endif %}
                 </ul>
                 <div class="single-card__section">
                     <h3 class="single-card__section-title">Ингридиенты:</h3>
                     <div class="single-card__items single-card__items_column">
                         {% for item in recipe.recipe_ingredients.all %}
-                            <p class=" single-card__section-item">{{ item.ingredient.title }} - {{ item.amount }} {{ item.ingredient.dimension }}</p>
+                        <p class=" single-card__section-item">{{ item.ingredient.title }} - {{ item.amount }}
+                            {{ item.ingredient.dimension }}</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -97,27 +108,27 @@
 
     </main>
     {% include 'f/footer.html' %}
-<script src="{% static 'js/config/config.js' %}"></script>
+    <script src="{% static 'js/config/config.js' %}"></script>
 
-{% if user.is_authenticated %}
-<script src="{% static 'js/components/Purchases.js' %}"></script>
-<script src="{% static 'js/components/Favorites.js' %}"></script>
-<script src="{% static 'js/components/Subscribe.js' %}"></script>
-<script src="{% static 'js/components/MainCards.js' %}"></script>
-<script src="{% static 'js/components/SingleCard.js' %}"></script>
-<script src="{% static 'js/components/Header.js' %}"></script>
-<script src="{% static 'js/api/Api.js' %}"></script>
-<script src="{% static 'singlePage.js' %}"></script>
+    {% if user.is_authenticated %}
+    <script src="{% static 'js/components/Purchases.js' %}"></script>
+    <script src="{% static 'js/components/Favorites.js' %}"></script>
+    <script src="{% static 'js/components/Subscribe.js' %}"></script>
+    <script src="{% static 'js/components/MainCards.js' %}"></script>
+    <script src="{% static 'js/components/SingleCard.js' %}"></script>
+    <script src="{% static 'js/components/Header.js' %}"></script>
+    <script src="{% static 'js/api/Api.js' %}"></script>
+    <script src="{% static 'singlePage.js' %}"></script>
 
-{% else %}
-<script src="{% static 'js/components/Purchases.js' %}"></script>
-<script src="{% static 'js/components/MainCards.js' %}"></script>
-<script src="{% static 'js/components/SingleCard.js' %}"></script>
-<script src="{% static 'js/components/Header.js' %}"></script>
-<script src="{% static 'js/api/Api.js' %}"></script>
-<script src="{% static 'js/singlePageNotAuth.js' %}"></script>
-{% endif %}
+    {% else %}
+    <script src="{% static 'js/components/Purchases.js' %}"></script>
+    <script src="{% static 'js/components/MainCards.js' %}"></script>
+    <script src="{% static 'js/components/SingleCard.js' %}"></script>
+    <script src="{% static 'js/components/Header.js' %}"></script>
+    <script src="{% static 'js/api/Api.js' %}"></script>
+    <script src="{% static 'js/singlePageNotAuth.js' %}"></script>
+    {% endif %}
 
 </body>
-</html>
 
+</html>

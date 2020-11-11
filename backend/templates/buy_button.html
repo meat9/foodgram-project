@@ -2,8 +2,10 @@
 
 {% if user.is_authenticated %}
 {% if recipe|is_shop:user %}
-        <button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button>
-    {% else %}
-        <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-    {% endif %}
+<button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span>
+    Рецепт добавлен</button>
+{% else %}
+<button class="button button_style_light-blue" name="purchases" data-out><span
+        class="icon-plus button__icon"></span>Добавить в покупки</button>
+{% endif %}
 {% endif %}

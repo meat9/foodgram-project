@@ -2,63 +2,69 @@
 {% load static %}
 {% csrf_token %}
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Мои подписки</title>
     <link rel="stylesheet" href="{% static 'pages/myFollow.css' %}">
 </head>
-<body class="body">
-<header class="header">
-    {% include 'f/nav.html' %}
-    {% load user_filters %}
-{% load templates_filters %}
-</header>
-<main class="main container">
-    <div class="main__header">
-        <h1 class="main__title">Мои подписки</h1>
-    </div>
-    <div class="card-list">
-        {% for item in page %}
-        <div class="card-user" data-author="{{ item.author.id }}">
-        <div class="card-user__header">
-            <h2 class="card-user__title">{{ item.author.get_full_name }}</h2>
-        </div>
-        <div class="card-user__body">
-            <ul class="card-user__items">
-                {% for recipe in item.author.recipes_author.all|slice:":3" %}
-                <li class="card-user__item">
-                    <div class="recipe">
-                        <img src="{{ recipe.image.url }}" alt="какой-то-текст" class="recipe__image">
-                        <h3 class="recipe__title">{{ recipe.title }}</h3>
-                        <p class="recipe__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
-                    </div>
-                </li>
-                {% endfor %}
-                <li class="card-user__item">
-                    <a href="{% url 'profile' item.author.username %}" class="card-user__link link">{% if item.author.recipes_author.count > 3 %}Еще {{ item.author.recipes_author.count|add:"-3"}} рецепт... {% endif %}</a>
-                </li>
-            </ul>
-        </div>
-        <div class="card-user__footer">
-            <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
-        </div>
-    </div>
-{% endfor %}
 
-    </div>
-    {% include 'f/pagination.html' %}
-</main>
-{% include 'f/footer.html' %}
-<script src="{% static 'js/config/config.js' %}"></script>
-<script src="{% static 'js/components/MainCards.js' %}"></script>
-<script src="{% static 'js/components/MyFollow.js' %}"></script>
-<script src="{% static 'js/components/Subscribe.js' %}"></script>
-<script src="{% static 'js/components/Header.js' %}"></script>
-<script src="{% static 'js/api/Api.js' %}"></script>
-<script src="{% static 'myFollow.js' %}"></script>
+<body class="body">
+    <header class="header">
+        {% include 'f/nav.html' %}
+        {% load user_filters %}
+        {% load templates_filters %}
+    </header>
+    <main class="main container">
+        <div class="main__header">
+            <h1 class="main__title">Мои подписки</h1>
+        </div>
+        <div class="card-list">
+            {% for item in page %}
+            <div class="card-user" data-author="{{ item.author.id }}">
+                <div class="card-user__header">
+                    <h2 class="card-user__title">{{ item.author.get_full_name }}</h2>
+                </div>
+                <div class="card-user__body">
+                    <ul class="card-user__items">
+                        {% for recipe in item.author.recipes_author.all|slice:":3" %}
+                        <li class="card-user__item">
+                            <div class="recipe">
+                                <img src="{{ recipe.image.url }}" alt="какой-то-текст" class="recipe__image">
+                                <h3 class="recipe__title">{{ recipe.title }}</h3>
+                                <p class="recipe__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.
+                                </p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                        <li class="card-user__item">
+                            <a href="{% url 'profile' item.author.username %}"
+                                class="card-user__link link">{% if item.author.recipes_author.count > 3 %}Еще
+                                {{ item.author.recipes_author.count|add:"-3"}} рецепт... {% endif %}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-user__footer">
+                    <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+        {% include 'f/pagination.html' %}
+    </main>
+    {% include 'f/footer.html' %}
+    <script src="{% static 'js/config/config.js' %}"></script>
+    <script src="{% static 'js/components/MainCards.js' %}"></script>
+    <script src="{% static 'js/components/MyFollow.js' %}"></script>
+    <script src="{% static 'js/components/Subscribe.js' %}"></script>
+    <script src="{% static 'js/components/Header.js' %}"></script>
+    <script src="{% static 'js/api/Api.js' %}"></script>
+    <script src="{% static 'myFollow.js' %}"></script>
 
 </body>
+
 </html>

@@ -2,119 +2,118 @@
 {% load static %}
 {% load templates_filters %}
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Рецепты</title>
-    <link rel="stylesheet" href="{% static 'pages/index.css' %}"> 
+    <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 </head>
+
 <body class="body">
-  <header class="header">
-
-    {% include 'f/nav.html' %}
-
-  </header>
+    <header class="header">
+        {% include 'f/nav.html' %}
+    </header>
     <main class="main container">
         <div class="main__header">
             {% block title %}
             <h1 class="main__title">Все Рецепты</h1>
             <ul class="tags">
                 {% for tag in all_tags %}
-                    <li class="tags__item">
-                        <a
-                            id="{{ tags.slug }}"
-                            class="tags__checkbox tags__checkbox_style_{{ tag.color }}
+                <li class="tags__item">
+                    <a id="{{ tags.slug }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }}
                             {% if tag.slug in request.GET|get_filter_values %} tags__checkbox_active {% endif %}"
-                            href="{% url 'index' %}?{{ request|get_filter_link:tag }}"></a>
-                        <span class="tags__label">{{ tag.name }}</span>
-                    </li>
+                        href="{% url 'index' %}?{{ request|get_filter_link:tag }}"></a>
+                    <span class="tags__label">{{ tag.name }}</span>
+                </li>
                 {% endfor %}
 
             </ul>
             {% endblock %}
         </div>
-
-            
         <div class="card-list">
-        {% block content %}
-        {% for post in page %}
-        <div class="card" data-id="{{ post.pk }}">
-            <a href="{% url 'recipe_view' post.author.username post.id %}" class="link" target="_blank">
-                {% if post.image %}
-                <img src="{{ post.image.url }}"" alt="{% static '/images/testCardImg.png' %}" class="card__image"></a>
+            {% block content %}
+            {% for post in page %}
+            <div class="card" data-id="{{ post.pk }}">
+                <a href="{% url 'recipe_view' post.author.username post.id %}" class="link" target="_blank">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}"" alt=" {% static '/images/testCardImg.png' %}"
+                        class="card__image"></a>
                 {% else %}
-                <img src="{% static '/images/testCardImg.png' %}"" alt="Image was broken" class="card__image"></a>
+                <img src="{% static '/images/testCardImg.png' %}"" alt=" Image was broken" class="card__image"></a>
                 {% endif %}
 
-            <div class="card__body">
-                <a class="card__title link" href="{% url 'recipe_view' post.author.username post.id %}" target="_blank">{{ post.title }}</a>
-                <ul class="card__items">
-
-                    {% if post.tags %}
+                <div class="card__body">
+                    <a class="card__title link" href="{% url 'recipe_view' post.author.username post.id %}"
+                        target="_blank">{{ post.title }}</a>
                     <ul class="card__items">
-                        {% for tag in post.tags.all %}
-                        <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
-                        {% endfor %}
+
+                        {% if post.tags %}
+                        <ul class="card__items">
+                            {% for tag in post.tags.all %}
+                            <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </ul>
+                    <div class="card__items card__items_column">
+                        <p class="card__text"><span class="icon-time"></span> {{ post.cooking_time }} мин.</p>
+                        <p class="card__text"><span class="icon-user"></span> <a
+                                href="{% url 'profile' post.author.username %}"
+                                style="color: black">{{ post.author }}</a></p>
+                    </div>
+                </div>
+                <div class="card__footer">
+                    {% load templates_filters %}
+
+                    {% if post|is_shop:user %}
+                    <button class="button button_style_light-blue-outline" name="purchases"><span
+                            class="icon-check button__icon"></span> Рецепт добавлен</button>
+                    {% else %}
+                    <button class="button button_style_light-blue" name="purchases" data-out><span
+                            class="icon-plus button__icon"></span>Добавить в покупки</button>
                     {% endif %}
-                </ul>
-                <div class="card__items card__items_column">
-                    <p class="card__text"><span class="icon-time"></span> {{ post.cooking_time }} мин.</p>
-                    <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile' post.author.username %}" style="color: black">{{ post.author }}</a></p>
+                    {% if user.is_authenticated %}
+                    {% if post|is_favorite:user %}
+                    <button class="button button_style_none" name="favorites"><span
+                            class="icon-favorite icon-favorite_active"></span></button>
+                    {% else %}
+                    <button class="button button_style_none" name="favorites" data-out><span
+                            class="icon-favorite"></span></button>
+                    {% endif %}
+                    {% endif %}
+
+                    </span></button>
                 </div>
             </div>
-            <div class="card__footer">
-                {% load templates_filters %}
-                
-                    {% if post|is_shop:user %}
-                        <button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button>
-                    {% else %}
-                        <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-                    {% endif %}
-                {% if user.is_authenticated %}
-                    {% if post|is_favorite:user %}
-                        <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
-                    {% else %}
-                        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
-                    {% endif %}
-                {% endif %}
-                
-
-
-        </span></button> 
-
-
-
-
-
-            </div>
+            {% endfor %}
+            {% endblock %}
         </div>
-        {% endfor %}
-        {% endblock %}
-    </div>
 
         {% include 'f/pagination.html' %}
     </main>
-{% include 'f/footer.html' %}
-<script src="{% static 'js/config/config.js' %}"></script>
-{% if user.is_authenticated %}
-<script src="{% static 'js/components/MainCards.js' %}"></script>
-<script src="{% static 'js/components/Purchases.js' %}"></script>
-<script src="{% static 'js/components/Favorites.js' %}"></script>
-<script src="{% static 'js/components/CardList.js' %}"></script>
-<script src="{% static 'js/components/Header.js' %}"></script>
-<script src="{% static 'js/api/Api.js' %}"></script>
-<script src="{% static 'js/indexAuth.js' %}"></script>
-{% else %}
-<script src="{% static 'js/components/MainCards.js' %}"></script>
-<script src="{% static 'js/components/Purchases.js' %}"></script>
-<script src="{% static 'js/components/CardList.js' %}"></script>
-<script src="{% static 'js/components/Header.js' %}"></script>
-<script src="{% static 'js/components/Favorites.js' %}"></script>
-<script src="{% static 'js/api/Api.js' %}"></script>
-<script src="{% static 'js/indexNotAuth.js' %}"></script>
-{% endif %}
+    {% include 'f/footer.html' %}
+    <script src="{% static 'js/config/config.js' %}"></script>
+    {% if user.is_authenticated %}
+    <script src="{% static 'js/components/MainCards.js' %}"></script>
+    <script src="{% static 'js/components/Purchases.js' %}"></script>
+    <script src="{% static 'js/components/Favorites.js' %}"></script>
+    <script src="{% static 'js/components/CardList.js' %}"></script>
+    <script src="{% static 'js/components/Header.js' %}"></script>
+    <script src="{% static 'js/api/Api.js' %}"></script>
+    <script src="{% static 'js/indexAuth.js' %}"></script>
+    {% else %}
+    <script src="{% static 'js/components/MainCards.js' %}"></script>
+    <script src="{% static 'js/components/Purchases.js' %}"></script>
+    <script src="{% static 'js/components/CardList.js' %}"></script>
+    <script src="{% static 'js/components/Header.js' %}"></script>
+    <script src="{% static 'js/components/Favorites.js' %}"></script>
+    <script src="{% static 'js/api/Api.js' %}"></script>
+    <script src="{% static 'js/indexNotAuth.js' %}"></script>
+    {% endif %}
 </body>
+
 </html>

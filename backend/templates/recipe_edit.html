@@ -1,6 +1,6 @@
 {% extends 'new_recipe.html' %}
 {% block title %}{% endblock %}
 {% block form_button %}
-        <button class="button button_style_blue">Сохранить</button> <a style="margin-left: 2.5em" href="{% url 'recipe_delete' recipe.id %}" class="form__ingredient-link">Удалить</a>
+<button class="button button_style_blue">Сохранить</button> <a style="margin-left: 2.5em"
+        href="{% url 'recipe_delete' recipe.id %}" class="form__ingredient-link">Удалить</a>
 {% endblock %}
-
