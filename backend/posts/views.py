@@ -12,7 +12,6 @@ from .utils import get_ingredients
 def index(request):
     tags_filter = request.GET.getlist("filters")
     recipe_list = Recipe.objects.order_by("-pub_date").all()
-    all_tags = Tag.objects.all()
     if tags_filter:
         recipe_list = recipe_list.filter(tags__slug__in=tags_filter).distinct().all()
     paginator = Paginator(recipe_list, 6)
@@ -21,13 +20,15 @@ def index(request):
     return render(
         request,
         "indexAuth.html",
-        {"page": page, "paginator": paginator, "all_tags": all_tags},
+        {
+            "page": page,
+            "paginator": paginator,
+        },
     )
 
 
 def new_post(request):
     user = User.objects.get(username=request.user)
-    all_tags = Tag.objects.all()
     if request.method == "POST":
         form = PostForm(request.POST or None, files=request.FILES or None)
         ingredients = get_ingredients(request)
@@ -47,7 +48,7 @@ def new_post(request):
             return redirect("index")
     else:
         form = PostForm()
-    return render(request, "formRecipe.html", {"form": form, "all_tags": all_tags})
+    return render(request, "formRecipe.html", {"form": form})
 
 
 def recipe_view(request, recipe_id, username):
@@ -60,7 +61,6 @@ def profile(request, username):
     username = get_object_or_404(User, username=username)
     tag = request.GET.getlist("filters")
     recipes = Recipe.objects.filter(author=username).order_by("-pub_date").all()
-    all_tags = Tag.objects.all()
     if tag:
         recipes = recipes.filter(tags__slug__in=tag)
     paginator = Paginator(recipes, 6)
@@ -73,14 +73,12 @@ def profile(request, username):
             "username": username,
             "page": page,
             "paginator": paginator,
-            "all_tags": all_tags,
         },
     )
 
 
 def recipe_edit(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    all_tags = Tag.objects.all()
     if request.user != recipe.author:
         return redirect("index")
     if request.method == "POST":
@@ -104,7 +102,7 @@ def recipe_edit(request, recipe_id):
     return render(
         request,
         "recipe_edit.html",
-        {"form": form, "recipe": recipe, "all_tags": all_tags},
+        {"form": form, "recipe": recipe},
     )
 
 
@@ -117,7 +115,6 @@ def recipe_delete(request, recipe_id):
 
 def favorite(request):
     tags_filter = request.GET.getlist("filters")
-    all_tags = Tag.objects.all()
     recipe_list = Recipe.objects.filter(follow_recipe__user__id=request.user.id).all()
     if tags_filter:
         recipe_list = recipe_list.filter(tags__slug__in=tags_filter).distinct().all()
@@ -127,7 +124,7 @@ def favorite(request):
     return render(
         request,
         "favorite.html",
-        {"page": page, "paginator": paginator, "all_tags": all_tags},
+        {"page": page, "paginator": paginator},
     )
 
 
