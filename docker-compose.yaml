@@ -1,38 +1,43 @@
-version: '3'
+# версия docker-compose
+version: '3.8'
 
+# имя директории для хранения данных
+volumes:
+  postgres_data:
+
+# имена и описания контейнеров, которые должны быть развёрнуты
 services:
+  # описание контейнера db
   db:
-    image: postgres:12.2
+    # образ, из которого должен быть запущен контейнер
+    image: postgres:12.4
+    # volume и связанная с ним директория в контейнере
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data/
+    # адрес файла, где хранятся переменные окружения
     env_file:
-      - .env
+      - ./.env
   web:
     build: .
     restart: always
+    #command: gunicorn backend.wsgi:application --bind 0.0.0.0:8020
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate --noinput && python manage.py import_ingred && gunicorn backend.wsgi:application --bind 0.0.0.0:8020"
     ports:
-      - 8020:8020
+      - "8020:8020"
+    # "зависит от", 
     depends_on:
       - db
     env_file:
-      - .env
+      - ./.env
+  nginx: 
+    image: nginx:1.19.3
+    #container_name: production_nginx
     volumes:
-      - static_volume:/code/static
-      - media_volume:/code/media
-    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8020
-  nginx:
-    build: ./nginx
+      - ./nginx:/nginx/conf
+      - ./static:/static
+
+    ports:
+      - "80:80"
     depends_on:
       - web
-    ports:
-      - 80:80
-    volumes:
-      - static_volume:/code/static
-      - media_volume:/code/media
-    links:
-      - web
-
-volumes:
-  postgres_data:
-  static_volume:
-  media_volume:
+    
