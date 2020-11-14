@@ -34,6 +34,6 @@ services:
       - 81:81
     volumes:
       - static_volume:/static/
-      - media_volume:/static/  
+      - media_volume:/media/  
     links:
       - web
