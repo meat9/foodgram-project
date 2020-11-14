@@ -3,8 +3,8 @@ version: '3'
 
 volumes:
   postgres_data:
-  static-data:
-  media-data:
+  static_volume:
+  media_volume:
     
 services:
   db:
