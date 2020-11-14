@@ -31,3 +31,7 @@ services:
       - media_volume:/code/media
     links:
       - web
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
