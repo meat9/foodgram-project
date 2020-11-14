@@ -131,5 +131,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+ingredients/
 ingredients
 ingredients.zip

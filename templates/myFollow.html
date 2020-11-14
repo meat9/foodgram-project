@@ -17,6 +17,7 @@
         {% include 'f/nav.html' %}
         {% load user_filters %}
         {% load templates_filters %}
+        {% csrf_token %}
     </header>
     <main class="main container">
         <div class="main__header">
@@ -30,7 +31,8 @@
                 </div>
                 <div class="card-user__body">
                     <ul class="card-user__items">
-                        {% for recipe in item.author.recipes_author.all|slice:":3" %}
+                        {% for recipe in item.author.recipes.all|slice:":3" %}
+
                         <li class="card-user__item">
                             <div class="recipe">
                                 <img src="{{ recipe.image.url }}" alt="какой-то-текст" class="recipe__image">
@@ -42,8 +44,8 @@
                         {% endfor %}
                         <li class="card-user__item">
                             <a href="{% url 'profile' item.author.username %}"
-                                class="card-user__link link">{% if item.author.recipes_author.count > 3 %}Еще
-                                {{ item.author.recipes_author.count|add:"-3"}} рецепт... {% endif %}</a>
+                                class="card-user__link link">{% if item.author.recipes.count > 3 %}Еще
+                                {{ item.author.recipes.count|add:"-3"}} рецепт... {% endif %}</a>
                         </li>
                     </ul>
                 </div>

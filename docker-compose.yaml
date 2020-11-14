@@ -20,18 +20,16 @@ services:
   web:
     build: .
     restart: always
-    #command: gunicorn backend.wsgi:application --bind 0.0.0.0:8020
-    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate --noinput && python manage.py import_ingred && gunicorn backend.wsgi:application --bind 0.0.0.0:8020"
+
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py makemigrations --noinput && python manage.py migrate --noinput && python manage.py import_ingred && gunicorn backend.wsgi:application --bind 0.0.0.0:8020"
     ports:
       - "8020:8020"
-    # "зависит от", 
     depends_on:
       - db
     env_file:
       - ./.env
   nginx: 
     image: nginx:1.19.3
-    #container_name: production_nginx
     volumes:
       - ./nginx:/nginx/conf
       - ./static:/static

@@ -36,9 +36,9 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "api",
     "posts",
     "users",
-    "api",
     "sorl.thumbnail",
     "django.contrib.sites",
     "django.contrib.flatpages",
