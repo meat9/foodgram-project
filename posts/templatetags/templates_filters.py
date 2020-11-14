@@ -4,17 +4,17 @@ from posts.models import FollowUser, FollowRecipe, ShoppingList
 register = template.Library()
 
 
-@register.filter(name='is_follow')
+@register.filter(name="is_follow")
 def is_follow(author, user):
     return FollowUser.objects.filter(user=user, author=author).exists()
 
 
-@register.filter(name='is_favorite')
+@register.filter(name="is_favorite")
 def is_favorite(recipe, user):
     return FollowRecipe.objects.filter(user=user, recipe=recipe).exists()
 
 
-@register.filter(name='is_shop')
+@register.filter(name="is_shop")
 def is_shop(recipe, user):
     if user.is_authenticated:
         return ShoppingList.objects.filter(user=user, recipe=recipe).exists()
@@ -22,9 +22,9 @@ def is_shop(recipe, user):
         return ShoppingList.objects.first()
 
 
-@register.filter(name='get_filter_values')
+@register.filter(name="get_filter_values")
 def get_filter_values(value):
-    return value.getlist('filters')
+    return value.getlist("filters")
 
 
 @register.filter(name="get_filter_link")
