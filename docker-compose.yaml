@@ -2,8 +2,8 @@ version: '3'
 
 volumes:
   postgres_data:
-  static:
-  media:
+  static_volume:
+  media_volume:
 
 services:
   db:
@@ -22,16 +22,16 @@ services:
     env_file:
       - .env
     volumes:
-      - static:/code/static/
-      - media:/code/media/
+      - static_volume:/code/static
+      - media_volume:/code/media
     command: bash -c "python manage.py collectstatic --noinput && python manage.py makemigrations --noinput && python manage.py migrate --noinput && python manage.py import_ingred && gunicorn backend.wsgi:application --bind 0.0.0.0:8020"
   nginx:
     image: nginx:1.19.0
     ports:
       - "80:80"
     volumes:
-      - static:/static
-      - media:/media
+      - static_volume:/code/static
+      - media_volume:/code/media
     depends_on:
       -  web
 
