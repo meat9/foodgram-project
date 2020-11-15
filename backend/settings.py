@@ -30,7 +30,7 @@ SECRET_KEY = "*$dcqleo8f-o)jy4=e*l3@$e&r2-p*t-!l(b&ve8qyi2exm)z4"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*", "84.201.179.160"]
+ALLOWED_HOSTS = ["*", "84.201.179.160", "www.me91at.cf", "me91at.cf"]
 
 
 # Application definition
