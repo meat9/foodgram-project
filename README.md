@@ -24,20 +24,20 @@
 В корневом каталоге проекта необходимо собрать образ из прилагающихся dockerfile.
 Для этого используем команду:
 ````
-docker-compose build
+sudo docker-compose build
 ````
 После успешного выполнения команды, присутпаем к запуску приложения:
 ````
-docker-compose up
+sudo docker-compose up
 ````
 Далее необходимо войти в контейнер Web для настройки приложения
 Узнаем ID_контейнера web командой:
 ````
- docker container ls -a
+sudo docker container ls -a
 ````
 Заходим в контейнер web:
 ````
-docker exec -ti id_контейнера bash
+sudo docker exec -ti id_контейнера bash
 ````
 
 Создадим суперпользователя:
