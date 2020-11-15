@@ -1,8 +1,8 @@
-[![Yamdb-app workflow](https://github.com/meat9/foodgram-project/workflows/Yamdb-app_workflow/badge.svg)](https://github.com/meat9/foodgram-project/actions)
+[![Foodgram workflow](https://github.com/meat9/foodgram-project/workflows/Yamdb-app_workflow/badge.svg)](https://github.com/meat9/foodgram-project/actions)
 
 ## Сайт "Продуктовый помощник FoodGram"
 
-[http://84.201.179.160/](http://84.201.179.160 "Продуктовый помощник")
+[http://me91at.cf/](http://me91at.cf "Продуктовый помощник")
 
 Это онлайн-сервис, где пользователи смогут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
 
