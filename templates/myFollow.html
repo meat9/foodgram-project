@@ -35,8 +35,12 @@
 
                         <li class="card-user__item">
                             <div class="recipe">
-
+                                {% if recipe.image %}
                                 <img src="{{ recipe.image.url }}" alt="какой-то-текст" class="recipe__image">
+                                {% else %}
+                                <img src="{% static '/images/testCardImg.png' %}" alt="какой-то-текст"
+                                    class="recipe__image">
+                                {% endif %}
                                 <h3 class="recipe__title">{{ recipe.title }}</h3>
                                 <p class="recipe__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.
                                 </p>
