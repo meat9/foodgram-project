@@ -24,8 +24,15 @@
                 {% for item in shop_list %}
                 <li class="shopping-list__item" data-id="{{item.recipe.id}}">
                     <div class="recipe recipe_reverse">
+
+                        {% if item.recipe.image %}
                         <img src="{{ item.recipe.image.url }}" alt="какой-то текст"
                             class="recipe__image recipe__image_big">
+                        {% else %}
+                        <img src="{% static '/images/testCardImg.png' %}" alt=" Image was broken"
+                            class="recipe__image recipe__image_big">
+                        {% endif %}
+
                         <h3 class="recipe__title">{{ item.recipe.title }}</h3>
                         <p class="recipe__text"><span class="icon-time"></span> {{ item.recipe.cooking_time }} мин.</p>
                     </div>

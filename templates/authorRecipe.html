@@ -37,7 +37,7 @@
 
 
         <div class="author-subscribe" data-author="{{ username.id }}">
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and not user == username%}
             {% if username|is_follow:user %}
             <button class="button button_style_light-blue button_size_auto" name="subscribe"><span
                     class="icon-check button__icon"></span>Отписаться от автора </button></p>
